@@ -2,43 +2,66 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
- */
+
 class UserFactory extends Factory
 {
-    /**
-     * The current password being used by the factory.
-     */
-    protected static ?string $password;
+    protected $model = User::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
+        $first = $this->faker->firstName();
+        $last  = $this->faker->lastName();
+
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
+            'code' => (string) $this->faker->unique()->numberBetween(10_000_000, 99_999_999),
+
+            'first_name' => $first,
+            'last_name' => $last,
+
+            // username único y “limpio”
+            'username' => $this->faker->unique()->userName(),
+
+            'phone' => $this->faker->unique()->numerify('9########'), // 9 + 8 dígitos (Perú-ish)
+            'date_of_birth' => $this->faker->dateTimeBetween('-45 years', '-18 years')->format('Y-m-d'),
+
+            'profile_photo' => null,
+
+            'email' => $this->faker->unique()->safeEmail(),
+            'password' => 'password123', // hasheado por cast "hashed"
+
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
+
+            'last_login_at' => null,
+            'failed_login_attempts' => 0,
+            'last_failed_login_at' => null,
+            'locked_until' => null,
+
+            'preferred_language' => $this->faker->randomElement(['es', 'en', 'pt']),
+            'timezone' => 'America/Lima',
+
+            // OJO: asegúrate de tener is_admin en $fillable o setéalo luego.
+            'is_admin' => false,
+
             'remember_token' => Str::random(10),
         ];
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
-    public function unverified(): static
+    public function admin(): static
     {
-        return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
+        return $this->state(fn() => [
+            'is_admin' => true,
+            'email_verified_at' => now(),
+        ]);
+    }
+
+    public function locked(int $minutes = 30): static
+    {
+        return $this->state(fn() => [
+            'locked_until' => now()->addMinutes($minutes),
         ]);
     }
 }

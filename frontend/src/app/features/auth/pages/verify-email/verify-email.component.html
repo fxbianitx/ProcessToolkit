@@ -1,0 +1,41 @@
+<div class="min-h-screen flex items-center justify-center bg-slate-50 p-6">
+    <div class="w-full max-w-[450px] bg-white border border-slate-200 rounded-[2.5rem] shadow-2xl shadow-slate-200/60 overflow-hidden">
+
+        <div class="px-10 pt-12 pb-4 text-left">
+            <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Verificación</p>
+            <h2 class="mt-2 text-slate-900 font-extrabold text-xl">Ingresa el código</h2>
+
+            <p class="mt-2 text-slate-500 text-sm leading-snug">
+                Te enviamos un código a <span class="font-bold text-slate-700">{{ email }}</span>.
+            </p>
+        </div>
+
+        <form [formGroup]="codeForm" (ngSubmit)="onSubmitCode()" class="px-10 pb-10">
+            <app-ui-input
+                label="Código"
+                type="text"
+                [control]="getControl('code')"
+                [submitted]="submitted"
+                placeholder="6 dígitos"
+                errorMsg={{apiError}}
+            />
+
+            <button type="submit"
+                [disabled]="isLoading"
+                class="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold text-[11px] uppercase tracking-[0.25em] transition-all duration-200
+                    hover:bg-slate-800 active:scale-[0.98] shadow-xl shadow-slate-200 disabled:opacity-60 disabled:cursor-not-allowed">
+                {{ isLoading ? 'Verificando...' : 'Verificar' }}
+            </button>
+
+            <div class="mt-4 text-center">
+                <button type="button"
+                    class="text-[11px] font-bold text-slate-500 hover:text-slate-700 uppercase tracking-widest transition-colors"
+                    (click)="onResendCode()"
+                >
+                    Reenviar código
+                </button>
+            </div>
+        </form>
+        
+    </div>
+</div>

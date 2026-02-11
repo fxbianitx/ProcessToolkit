@@ -19,6 +19,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->softDeletes(); 
             $table->timestamps();
+            $table->unique(['user_id', 'organization_id']);
         });
     }
 

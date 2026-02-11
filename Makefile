@@ -4,6 +4,10 @@
 
 .PHONY: help up down build rebuild logs bash ps clean
 
+UID := $(shell id -u)
+GID := $(shell id -g)
+DOCKER_EXEC = docker-compose exec -u $(UID):$(GID)
+
 # ====================
 # AYUDA (comando principal)
 # ====================
@@ -79,9 +83,6 @@ rebuild: down build up
 ps:
 	docker-compose ps
 
-logs:
-	docker-compose logs -f backend
-
 logs-all:
 	docker-compose logs -f
 
@@ -94,53 +95,53 @@ logs-redis:
 # ====================
 # ACCESO A CONTENEDORES
 # ====================
-bash:
-	docker-compose exec backend bash
+exec-backend:
+	docker-compose exec -u $(UID):$(GID) backend bash
 
-db-bash:
+exec-frontend:
+	docker exec -it processtool-frontend-1 sh
+
+exec-db:
 	docker-compose exec sqlserver bash
-
-redis-cli:
-	docker-compose exec redis redis-cli -a RedisPass123
 
 # ====================
 # LARAVEL - COMANDOS COMUNES
 # ====================
 tinker:
-	docker-compose exec backend php artisan tinker
+	$(DOCKER_EXEC) -e HOME=/tmp backend php artisan tinker
 
 migrate:
-	docker-compose exec backend php artisan migrate
+	$(DOCKER_EXEC) backend php artisan migrate
 
 fresh:
-	docker-compose exec backend php artisan migrate:fresh --seed
+	$(DOCKER_EXEC) backend php artisan migrate:fresh --seed
 
 seed:
-	docker-compose exec backend php artisan db:seed
+	$(DOCKER_EXEC) backend php artisan db:seed
 
 test:
-	docker-compose exec backend php artisan test
+	$(DOCKER_EXEC) backend php artisan test
 
 optimize:
-	docker-compose exec backend php artisan optimize
+	$(DOCKER_EXEC) backend php artisan optimize
 
 key:
-	docker-compose exec backend php artisan key:generate
+	$(DOCKER_EXEC) backend php artisan key:generate
 
 storage:
-	docker-compose exec backend php artisan storage:link
+	$(DOCKER_EXEC) backend php artisan storage:link
 
 clear:
-	docker-compose exec backend php artisan optimize:clear
+	$(DOCKER_EXEC)c backend php artisan optimize:clear
 
 # ====================
 # ARTISAN Y COMPOSER DINÁMICOS
 # ====================
 artisan:
-	docker-compose exec backend php artisan $(filter-out $@,$(MAKECMDGOALS))
+	$(DOCKER_EXEC) backend php artisan $(filter-out $@,$(MAKECMDGOALS))
 
 composer:
-	docker-compose exec backend composer $(filter-out $@,$(MAKECMDGOALS))
+	$(DOCKER_EXEC) backend composer $(filter-out $@,$(MAKECMDGOALS))
 
 # ====================
 # BASE DE DATOS

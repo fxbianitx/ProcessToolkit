@@ -1,0 +1,57 @@
+<div class="min-h-screen flex items-center justify-center bg-slate-50 p-6">
+    <div class="w-full max-w-[450px] bg-white border border-slate-200 rounded-[2.5rem] shadow-2xl shadow-slate-200/60 overflow-hidden">
+
+        <!-- Header -->
+        <app-auth-header/>
+
+        <!-- Formulario -->
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmitCredentials()" class="px-10 pb-8">
+
+            <!-- Input de Correo electronico -->
+            <app-ui-input 
+                label="Correo electronico" 
+                type="email" 
+                [control]="getControl('email')"
+                [submitted]="formSubmitted" 
+                placeholder="ejemplo@email.com" 
+                errorMsg="Email no válido"
+            />
+
+            <!-- Input de Contraseña -->
+            <app-ui-input-password
+                label="Contraseña"
+                type="password"
+                [control]="getControl('password')"
+                [submitted]="formSubmitted"
+                placeholder="••••••••"
+                errorMsg="Mínimo 8 caracteres"
+            >
+                <!-- Boton de recuperacion de contraseña -->
+                <a class="text-[10px] font-bold text-indigo-600 hover:text-indigo-800 uppercase tracking-tight transition-colors" 
+                    href="#"
+                    label-extra
+                >
+                    ¿Olvidaste tu clave?
+                </a>
+
+            </app-ui-input-password>
+
+            <app-ui-login-actions 
+                googleLabel="Continuar con Google"
+                (googleClick)="onClickGoogleAuth()"
+            />
+
+            <div class="mt-6 text-center">
+                <a class="text-[11px] font-bold text-slate-500 hover:text-slate-700 uppercase tracking-widest transition-colors"
+                    routerLink="/auth/register"
+                >
+                ¿Aún no tienes cuenta? Registrate aquí
+                </a>
+            </div>
+        </form>
+
+        <!-- Footer -->
+        <app-auth-footer/>
+
+    </div>
+</div>

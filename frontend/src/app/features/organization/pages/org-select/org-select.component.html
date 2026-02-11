@@ -1,0 +1,42 @@
+<app-org-shell
+  title="Organizaciones"
+  subtitle="Selecciona una organización para continuar o crea una nueva."
+>
+    <app-org-section-head
+        title="Tus organizaciones"
+        description="Accede al dashboard, reglas y auditoría por organización."
+        [actionLabel]="'Crear organización'"
+        (action)="goCreate()"
+    ></app-org-section-head>
+
+    <!-- Loading -->
+    <div
+        *ngIf="loading"
+        class="rounded-2xl border border-slate-800 bg-slate-950/40 p-6 text-slate-300 backdrop-blur"
+    >
+        <div class="flex items-center gap-3">
+        <div class="h-5 w-5 animate-spin rounded-full border-2 border-slate-700 border-t-slate-200"></div>
+        <span class="text-sm">Cargando organizaciones…</span>
+        </div>
+    </div>
+
+    <!-- Empty -->
+    <app-org-empty
+        *ngIf="!loading && orgs.length === 0"
+        (create)="goCreate()"
+    ></app-org-empty>
+
+    <!-- List -->
+    <div *ngIf="!loading && orgs.length > 0" class="grid gap-3 sm:grid-cols-2">
+        <app-org-card
+        *ngFor="let item of orgs"
+        [org]="item"
+        (selected)="select($event)"
+        ></app-org-card>
+    </div>
+
+    <!-- Hint para futuro join por código -->
+    <div class="mt-6 text-xs text-slate-400">
+        Próximamente: unirse por código, solicitudes y aprobaciones por owner/admin.
+    </div>
+</app-org-shell>

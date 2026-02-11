@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "./styles/theme.css";
+
+/* detalles finos */
+:root {
+    color-scheme: light;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+/* focus visible accesible */
+:focus-visible {
+    outline: 3px solid rgba(255, 86, 48, 0.35);
+    outline-offset: 3px;
+    border-radius: 10px;
+}
+
+/* selección */
+::selection {
+    background: rgba(255, 86, 48, 0.18);
+}
+
+/* util premium para “hairline borders” */
+.hairline {
+    box-shadow: inset 0 0 0 1px rgba(17, 24, 39, 0.08);
+}
+
+@keyframes nav-sheen {
+    0% {
+        transform: translateX(-140%);
+    }
+
+    100% {
+        transform: translateX(140%);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeInUp {
+    animation: fadeInUp 0.7s ease forwards;
+}

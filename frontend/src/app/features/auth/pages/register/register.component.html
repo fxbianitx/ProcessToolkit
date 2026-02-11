@@ -1,0 +1,63 @@
+<div class="min-h-screen flex items-center justify-center bg-slate-50 p-6">
+    <div class="w-full max-w-[450px] bg-white border border-slate-200 rounded-[2.5rem] shadow-2xl shadow-slate-200/60 overflow-hidden">
+
+        <app-auth-header/>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmitRegister()" class="px-10 pb-8">
+
+            <app-ui-input
+                label="Correo electronico"
+                type="email"
+                [control]="getControl('email')"
+                [submitted]="formSubmitted"
+                placeholder="ejemplo@email.com"
+                errorMsg="Email no válido"
+                autocomplete="username"
+                name="username"
+            />
+
+            <app-ui-input-password
+                label="Contraseña"
+                type="password"
+                [control]="getControl('password')"
+                [submitted]="formSubmitted"
+                placeholder="••••••••"
+                errorMsg="Mínimo 8 caracteres"
+                autocomplete="new-password"
+            />
+
+            <app-ui-input-password
+                label="Confirmar contraseña"
+                type="password"
+                [control]="getControl('passwordConfirmation')"
+                [submitted]="formSubmitted"
+                placeholder="••••••••"
+                errorMsg="Las contraseñas no coinciden"
+                autocomplete="new-password"
+            />
+
+
+            <div *ngIf="formSubmitted && registerForm.errors?.['passwordMismatch']" class="mb-4 px-1">
+                <p class="text-[10px] text-red-500 font-bold uppercase leading-none">
+                ● Las contraseñas no coinciden
+                </p>
+            </div>
+
+            <app-ui-register-actions 
+                (submitClick)="onSubmitRegister()"
+                (googleClick)="onClickGoogleAuth()"
+            />
+
+            <div class="mt-6 text-center">
+                <a class="text-[11px] font-bold text-slate-500 hover:text-slate-700 uppercase tracking-widest transition-colors"
+                    routerLink="/auth/login"
+                >
+                    ¿Ya tienes cuenta? Inicia sesión
+                </a>
+            </div>
+
+        </form>
+
+        <app-auth-footer/>
+    </div>
+</div>

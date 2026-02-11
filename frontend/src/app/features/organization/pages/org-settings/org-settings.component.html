@@ -1,0 +1,72 @@
+<app-org-shell
+    title="Configuración"
+    subtitle="Gestiona datos básicos de tu organización."
+>
+    <div *ngIf="loading"
+        class="rounded-2xl border border-slate-800 bg-slate-950/40 p-6 text-slate-300 backdrop-blur">
+        <div class="flex items-center gap-3">
+        <div class="h-5 w-5 animate-spin rounded-full border-2 border-slate-700 border-t-slate-200"></div>
+        <span class="text-sm">Cargando configuración…</span>
+        </div>
+    </div>
+
+    <div *ngIf="!loading"
+        class="rounded-2xl border border-slate-800 bg-slate-950/40 p-6 backdrop-blur">
+        <h2 class="text-lg font-semibold text-white">Información</h2>
+        <p class="mt-1 text-sm text-slate-300">
+        Cambios visibles en panel y reportes.
+        </p>
+
+        <div class="mt-6 grid gap-4 sm:grid-cols-2">
+        <div>
+            <label class="mb-2 block text-sm font-medium text-slate-200">Nombre</label>
+            <input
+            [(ngModel)]="name"
+            type="text"
+            class="w-full rounded-xl border border-slate-800 bg-slate-950/50 px-4 py-3 text-sm text-white placeholder:text-slate-500
+                    outline-none transition focus:border-slate-700 focus:ring-2 focus:ring-sky-400/40"
+            placeholder="Nombre de la organización"
+            />
+        </div>
+
+        <div>
+            <label class="mb-2 block text-sm font-medium text-slate-200">Código</label>
+            <input
+            type="text"
+            [value]="org?.code || ''"
+            disabled
+            class="w-full cursor-not-allowed rounded-xl border border-slate-800 bg-slate-950/30 px-4 py-3 text-sm text-slate-300"
+            />
+            <div class="mt-2 text-xs text-slate-400">
+            Este código se usará para unirse por invitación.
+            </div>
+        </div>
+        </div>
+
+        <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+        <button
+            type="button"
+            (click)="back()"
+            class="rounded-xl border border-slate-800 bg-slate-950/40 px-4 py-2 text-sm font-semibold text-white
+                shadow-sm backdrop-blur transition hover:border-slate-700 hover:bg-slate-950/60"
+        >
+            Volver
+        </button>
+
+        <button
+            type="button"
+            [disabled]="saving || !name.trim()"
+            (click)="save()"
+            class="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition
+                hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60
+                focus:outline-none focus:ring-2 focus:ring-sky-400/50"
+        >
+            <span *ngIf="!saving">Guardar cambios</span>
+            <span *ngIf="saving" class="inline-flex items-center gap-2">
+            <span class="h-4 w-4 animate-spin rounded-full border-2 border-slate-400 border-t-slate-900"></span>
+            Guardando…
+            </span>
+        </button>
+        </div>
+    </div>
+</app-org-shell>

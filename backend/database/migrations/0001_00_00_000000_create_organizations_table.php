@@ -12,9 +12,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->string('api_token', 80)->unique();
-            $table->string('webhook_url')->nullable();
-            $table->json('settings')->nullable(); 
+            $table->string('api_token_hash', 80)->unique();
+            $table->json('settings')->nullable();
             $table->enum('status', ['trial', 'active', 'suspended'])->default('active');
             $table->softDeletes();
             $table->timestamps();

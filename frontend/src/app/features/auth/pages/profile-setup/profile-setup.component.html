@@ -1,0 +1,91 @@
+<div class="min-h-screen flex items-center justify-center bg-slate-50 p-6">
+    <div class="w-full max-w-[520px] bg-white border border-slate-200 rounded-[2.5rem] shadow-2xl shadow-slate-200/60 overflow-hidden">
+
+        <!-- Intro -->
+        <div class="px-10 pt-9 pb-2 text-left" [@fadeSlideIn]>
+            <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Perfil</p>
+            <h2 class="mt-1 text-slate-900 font-extrabold text-xl">Completa tus datos</h2>
+
+            <p class="mt-2 mb-2 text-slate-500 text-sm leading-snug">
+                Tu correo <span class="font-bold text-slate-700">{{ email }}</span> ya fue verificado.
+            </p>
+        </div>
+
+        <!-- Form -->
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmitProfile()" class="px-10 pb-9" [@fadeSlideIn]>
+
+            <!-- Nombres + Apellidos -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <app-ui-input
+                    label="Nombres"
+                    type="text"
+                    [control]="getControl('first_name')"
+                    [submitted]="submitted"
+                    placeholder="José"
+                    errorMsg="Mínimo 2 caracteres"
+                />
+
+                <app-ui-input
+                    label="Apellidos"
+                    type="text"
+                    [control]="getControl('last_name')"
+                    [submitted]="submitted"
+                    placeholder="Flores"
+                    errorMsg="Mínimo 2 caracteres"
+                />
+            </div>
+
+            <!-- Username -->
+            <app-ui-input
+                label="Username"
+                type="text"
+                [control]="getControl('username')"
+                [submitted]="submitted"
+                placeholder="ej: ismperz222"
+                errorMsg="3-20 caracteres, solo letras/números/_"
+            >
+                <button type="button"
+                    label-extra
+                    class="text-[10px] font-bold text-indigo-600 hover:text-indigo-800 uppercase tracking-tight transition-colors"
+                    (click)="suggestUsername()"
+                >
+                    Sugerir
+                </button>
+            </app-ui-input>
+
+            <!-- Teléfono
+            <app-ui-input
+                label="Telefono"
+                type="text"
+                [control]="getControl('username')"
+                [submitted]="submitted"
+                placeholder="ej: ismperz222"
+                errorMsg="3-20 caracteres, solo letras/números/_"
+            />
+            -->
+
+            <!-- Fecha de nacimiento -->
+            <app-ui-input
+                label="Fecha de nacimiento"
+                type="date"
+                [control]="getControl('birth_date')"
+                [submitted]="submitted"
+                placeholder=""
+                errorMsg="Fecha inválida"
+            />
+
+            <!-- Boton para guardar los datos -->
+            <button type="submit"
+                class="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold text-[11px] uppercase tracking-[0.25em] transition-all duration-200
+                    hover:bg-slate-800 active:scale-[0.98] shadow-xl shadow-slate-200"
+            >
+                Guardar perfil
+            </button>
+
+            <p class="mt-6 text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest">
+                Puedes dejar username vacío y configurarlo después
+            </p>
+        </form>
+
+    </div>
+</div>
