@@ -1,0 +1,30 @@
+<button
+  type="button"
+  (click)="orgClicked.emit()"
+  class="w-full inline-flex items-center justify-between gap-2 rounded-2xl
+         border border-slate-200/70 bg-white/60 px-3 py-2.5
+         backdrop-blur-xl shadow-[0_1px_0_rgba(15,23,42,0.06)]
+         hover:bg-white hover:border-slate-300
+         focus:outline-none focus:ring-2 focus:ring-sky-400/35"
+  [class.justify-center]="collapsed"
+>
+  <div class="flex items-center gap-2 min-w-0" [class.justify-center]="collapsed">
+    <div class="grid h-9 w-9 place-items-center rounded-xl bg-slate-900 text-white text-xs font-bold">
+      ORG
+    </div>
+
+    <div *ngIf="!collapsed" class="min-w-0 text-left">
+      <div class="text-[11px] text-slate-500">Organización</div>
+      <div class="text-sm font-semibold text-slate-900 truncate">
+        {{ orgName || 'Seleccionar organización' }}
+      </div>
+    </div>
+  </div>
+
+  <svg *ngIf="!collapsed" class="h-4 w-4 text-slate-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+    <path fill-rule="evenodd"
+      d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"
+      clip-rule="evenodd"
+    />
+  </svg>
+</button>

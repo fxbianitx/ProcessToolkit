@@ -1,0 +1,51 @@
+<div class="rounded-2xl border border-slate-200/60 bg-white/60 p-5">
+    <div class="flex items-start justify-between gap-3">
+        <div>
+            <div class="text-sm font-semibold text-slate-900">Código de organización</div>
+            <div class="mt-1 text-xs text-slate-500">Ej: PT-93KQ1 (sin espacios)</div>
+        </div>
+
+        <div class="text-xs text-slate-500">
+            Estado: <span class="font-semibold text-slate-700">Pendiente</span>
+        </div>
+    </div>
+
+    <div class="mt-4 grid gap-3 sm:grid-cols-[1fr_auto]">
+        <input
+            [(ngModel)]="code"
+            (ngModelChange)="codeChange.emit($event)"
+            placeholder="Ingresa el código…"
+            class="w-full rounded-xl border border-slate-200/70 bg-white/80 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-300 focus:ring-2 focus:ring-sky-400/25"
+        />
+
+        <button
+            type="button"
+            (click)="apply.emit()"
+            [disabled]="!codeOk || applying"
+            class="inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold border border-slate-200/70 bg-white/70 text-slate-900 backdrop-blur-xl shadow-[0_1px_0_rgba(15,23,42,0.06),0_10px_20px_rgba(15,23,42,0.06)] transition hover:bg-white hover:border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-sky-400/40"
+        >
+            <span *ngIf="!applying">Aplicar</span>
+            <span *ngIf="applying" class="inline-flex items-center gap-2">
+                <span
+                    class="h-4 w-4 animate-spin rounded-full border-2 border-slate-300 border-t-slate-900"
+                ></span>
+                Enviando…
+            </span>
+        </button>
+    </div>
+
+    <div class="mt-4">
+        <label class="text-sm font-semibold text-slate-900">Mensaje opcional</label>
+        <p class="mt-1 text-xs text-slate-500">
+            Esto ayuda a que el admin sepa quién eres (área, rol, motivo).
+        </p>
+
+        <textarea
+            rows="3"
+            [(ngModel)]="note"
+            (ngModelChange)="noteChange.emit($event)"
+            placeholder="Ej: Soy Fabián, área logística. Necesito acceso al dashboard de reglas."
+            class="mt-2 w-full resize-none rounded-xl border border-slate-200/70 bg-white/80 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-300 focus:ring-2 focus:ring-sky-400/25"
+        ></textarea>
+    </div>
+</div>

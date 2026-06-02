@@ -1,10 +1,11 @@
 import { CommonModule } from "@angular/common";
 import { Component, Input } from "@angular/core";
+import { CardContentComponent } from "@shared/components/card-content/card-content.component";
 
 @Component({
     selector: "app-org-shell",
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, CardContentComponent],
     templateUrl: "./org-shell.component.html",
 })
 export class OrgShellComponent {

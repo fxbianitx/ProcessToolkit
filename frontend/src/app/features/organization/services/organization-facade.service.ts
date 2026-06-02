@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { Observable, tap } from "rxjs";
 import { OrganizationApiService } from "./organization-api.service";
 import { OrganizationContextState } from "@organization/state/organization-context.state";
@@ -8,12 +8,14 @@ import { CreateOrganizationDto } from "@organization/data/dtos/create-organizati
 @Injectable({ providedIn: "root" })
 export class OrganizationFacade {
     //! Exponer organización actual como observable
-    org$ = this.ctx.org$;
+    org$!: typeof this.ctx.org$;
 
     constructor(
         private api: OrganizationApiService,
         private ctx: OrganizationContextState
-    ) { }
+    ) {
+        this.org$ = this.ctx.org$;
+    }
 
     //! Listar organizaciones del usuario
     listMyOrgs$(): Observable<Organization[]> {

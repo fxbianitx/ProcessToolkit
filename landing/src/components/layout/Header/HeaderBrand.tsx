@@ -1,9 +1,10 @@
 "use client";
+import { Link } from 'react-router-dom'
 
 export default function HeaderBrand() {
     return (
-        <a
-            href="#"
+        <Link
+            to="/"
             aria-label="Rules Engine"
             className="group inline-flex items-center gap-3 rounded-2xl px-2 py-2 -ml-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         >
@@ -31,6 +32,6 @@ export default function HeaderBrand() {
                     Motor de reglas + auditoría
                 </span>
             </span>
-        </a>
+        </Link>
     );
 }

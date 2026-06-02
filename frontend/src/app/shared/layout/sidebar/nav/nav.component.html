@@ -1,0 +1,32 @@
+<div class="mt-1">
+    <div *ngIf="!collapsed" class="px-2 text-[11px] font-semibold text-slate-500">
+        Navegación
+    </div>
+
+    <nav class="mt-2 grid ">
+        <a *ngFor="let item of nav" [href]="item.href" class="group inline-flex items-center justify-between gap-2 rounded-2xl px-2.5 py-2.5
+             text-sm font-semibold text-slate-700
+             hover:bg-slate-900/[0.04] hover:text-slate-900
+             focus:outline-none focus:ring-2 focus:ring-sky-400/30" [class.justify-center]="collapsed"
+            [attr.title]="collapsed ? item.label : null">
+            <div class="inline-flex items-center gap-2.5 min-w-0" [class.justify-center]="collapsed">
+                <span class="grid h-9 w-9 place-items-center rounded-xl border border-slate-200/70 bg-white/60
+                 shadow-[0_1px_0_rgba(15,23,42,0.06)]
+                 group-hover:bg-white group-hover:border-slate-300">
+                    <svg class="h-5 w-5 text-slate-700" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path [attr.d]="iconPath(item.icon)"></path>
+                    </svg>
+                </span>
+
+                <div *ngIf="!collapsed" class="min-w-0">
+                    <div class="truncate">{{ item.label }}</div>
+                </div>
+            </div>
+
+            <span *ngIf="!collapsed && item.badge"
+                class="rounded-xl border border-slate-200/70 bg-white/60 px-2 py-0.5 text-[11px] font-semibold text-slate-600">
+                {{ item.badge }}
+            </span>
+        </a>
+    </nav>
+</div>

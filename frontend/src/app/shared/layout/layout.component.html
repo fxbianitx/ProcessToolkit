@@ -1,0 +1,63 @@
+<div class="h-screen flex flex-col bg-slate-50">
+  <!-- HEADER -->
+  <app-header
+    brand="ProcessTool"
+    [orgName]="orgName"
+    [userName]="userName"
+    [userEmail]="userEmail"
+    (sidebarToggle)="toggleMobileSidebar()"
+    (createClicked)="onCreate()"
+    (orgClicked)="onOrg()"
+    (profileClicked)="onProfile()"
+    (logoutClicked)="onLogout()"
+  ></app-header>
+
+  <!-- BODY -->
+  <div class="flex-1 min-h-0 relative">
+    <!-- ✅ Flex en vez de grid -->
+    <div class="h-full flex">
+      <!-- ✅ Desktop sidebar SIEMPRE en DOM (no *ngIf), solo se oculta en mobile -->
+      <div class="hidden lg:block w-[280px] shrink-0 h-full overflow-hidden">
+        <app-sidebar
+          [brand]="'ProcessTool'"
+          [logoText]="'P'"
+          [orgName]="orgName"
+          [userName]="userName"
+          [userEmail]="userEmail"
+          (orgClicked)="onOrg()"
+          (createClicked)="onCreate()"
+          (profileClicked)="onProfile()"
+          (logoutClicked)="onLogout()"
+        ></app-sidebar>
+      </div>
+
+      <!-- Main -->
+      <main class="flex-1 min-w-0 h-full overflow-y-auto">
+        <router-outlet></router-outlet>
+      </main>
+    </div>
+
+    <!-- MOBILE OVERLAY + DRAWER -->
+    <div class="absolute inset-0 z-40 lg:hidden" *ngIf="mobileSidebarOpen">
+      <!-- Overlay -->
+      <div class="absolute inset-0 bg-slate-900/60" (click)="closeMobileSidebar()" @overlay></div>
+
+      <!-- Drawer -->
+      <div class="absolute inset-y-0 left-0 w-[180px] max-w-[50vw] h-full" @drawer>
+        <div class="h-full">
+          <app-sidebar
+            [brand]="'ProcessTool'"
+            [logoText]="'P'"
+            [orgName]="orgName"
+            [userName]="userName"
+            [userEmail]="userEmail"
+            (orgClicked)="onOrg(); closeMobileSidebar()"
+            (createClicked)="onCreate(); closeMobileSidebar()"
+            (profileClicked)="onProfile(); closeMobileSidebar()"
+            (logoutClicked)="onLogout(); closeMobileSidebar()"
+          ></app-sidebar>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

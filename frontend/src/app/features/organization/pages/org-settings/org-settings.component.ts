@@ -33,7 +33,7 @@ export class OrgSettingsComponent implements OnInit, OnDestroy {
 
     constructor(
         private route: ActivatedRoute,
-        private router: Router,
+        public router: Router,
         private api: OrganizationApiService,
         private facade: OrganizationFacade
     ) { }

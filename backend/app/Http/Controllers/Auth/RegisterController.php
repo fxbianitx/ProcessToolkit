@@ -14,6 +14,7 @@ use App\Services\Auth\Register\VerifyRegisterService;
 
 class RegisterController extends Controller
 {
+    //! Servicios necesarios para el flujo completo de registro
     public function __construct(
         protected StartRegisterService $startServ,
         protected VerifyRegisterService $verifyServ,
@@ -21,13 +22,16 @@ class RegisterController extends Controller
         protected CompleteRegisterService $completeServ
     ) {}
 
+    //! Iniciar proceso de registro generando sesión y OTP
     public function start(RegisterStartRequest $request)
     {
+        // Delegar lógica de inicio al servicio correspondiente
         $session = $this->startServ->handle(
             $request->input('email'),
             $request->input('password')
         );
 
+        //? Retornar token de registro y datos básicos de sesión
         return response()->json([
             'message' => 'Te enviamos un código a tu correo.',
             'data' => [
@@ -38,13 +42,16 @@ class RegisterController extends Controller
         ], 201);
     }
 
+    //! Verificar código OTP asociado a la sesión de registro
     public function verify(RegisterVerifyRequest $request)
     {
+        // Delegar verificación al servicio correspondiente
         $session = $this->verifyServ->handle(
             $request->input('registration_token'),
             $request->input('code')
         );
 
+        //? Retornar confirmación de verificación
         return response()->json([
             'message' => 'Correo verificado.',
             'data' => [
@@ -54,12 +61,15 @@ class RegisterController extends Controller
         ]);
     }
 
+    //! Reenviar código OTP respetando reglas de cooldown
     public function resend(RegisterResendRequest $request)
     {
+        // Delegar reenvío al servicio correspondiente
         $session = $this->resendServ->handle(
             $request->input('registration_token')
         );
 
+        //? Retornar nueva fecha de expiración del código
         return response()->json([
             'message' => 'Te reenviamos un nuevo código a tu correo.',
             'data' => [
@@ -69,12 +79,16 @@ class RegisterController extends Controller
         ]);
     }
 
+    //! Completar registro y crear usuario definitivo
     public function complete(RegisterCompleteRequest $request)
     {
+        // Obtener datos validados del request
         $data = $request->validated();
 
+        // Delegar creación de usuario al servicio correspondiente
         $user = $this->completeServ->handle($data['registration_token'], $data);
 
+        //? Retornar información básica del usuario creado
         return response()->json([
             'message' => 'Cuenta creada correctamente.',
             'data' => [

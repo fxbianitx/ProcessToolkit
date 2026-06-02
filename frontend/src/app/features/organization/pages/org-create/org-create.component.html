@@ -1,71 +1,331 @@
-<app-org-shell title="Crear organización"
-    subtitle="Crea tu organización y quedarás como owner para gestionar reglas, auditoría y miembros.">
+<app-org-shell
+    title="Crear organización"
+    subtitle="Crea tu organización y quedarás como owner para gestionar reglas, auditoría y miembros."
+>
     <div class="grid gap-6 lg:grid-cols-5">
         <!-- Form -->
         <div class="lg:col-span-3">
-            <div class="rounded-2xl border border-slate-800 bg-slate-950/40 p-6 shadow-sm backdrop-blur">
-                <div class="mb-5">
-                    <h2 class="text-lg font-semibold text-white">Datos básicos</h2>
-                    <p class="mt-1 text-sm text-slate-300">
+            <div
+                class="rounded-2xl border border-slate-200/70 bg-white/65 p-6 text-slate-900 backdrop-blur-xl shadow-[0_1px_0_rgba(15,23,42,0.06),0_12px_28px_rgba(15,23,42,0.06)]"
+            >
+                <div class="space-y-4">
+                    <h2 class="text-lg font-semibold tracking-[-0.01em] text-slate-900">
+                        Datos básicos
+                    </h2>
+                    <p class="text-sm leading-6 text-slate-600">
                         El nombre se mostrará en el panel y en reportes de auditoría.
                     </p>
+
+                    <label class="block text-sm font-semibold text-slate-800">
+                        Nombre de la organización
+                    </label>
+
+                    <input
+                        [(ngModel)]="name"
+                        type="text"
+                        placeholder="Ej: Datamold Company"
+                        class="w-full rounded-xl border border-slate-200/70 bg-white/80 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-sky-300 focus:ring-2 focus:ring-sky-400/25"
+                    />
+
+                    <div class="mt-2 text-xs text-slate-500">
+                        Consejo: usa un nombre corto y claro. Podrás cambiarlo después.
+                    </div>
                 </div>
 
-                <label class="mb-2 block text-sm font-medium text-slate-200">
-                    Nombre de la organización
-                </label>
+                <!-- ✅ Configuración inicial -->
+                <div class="mt-4 space-y-4">
+                    <!-- Checklist -->
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <h3 class="text-sm font-semibold text-slate-900">Configuración</h3>
+                            <p class="mt-1 text-xs leading-5 text-slate-500">
+                                Elige lo básico para que la org quede lista en 1 minuto.
+                            </p>
+                        </div>
+                        <span
+                            class="shrink-0 rounded-lg border border-slate-200/70 bg-white/70 px-2 py-1 text-[11px] font-semibold text-slate-600"
+                        >
+                            Setup
+                        </span>
+                    </div>
 
-                <!-- Si tu ui-input existe, úsalo aquí -->
-                <input [(ngModel)]="name" type="text" placeholder="Ej: Datamold Company" class="w-full rounded-xl border border-slate-800 bg-slate-950/50 px-4 py-3 text-sm text-white placeholder:text-slate-500
-                    shadow-sm outline-none transition focus:border-slate-700 focus:ring-2 focus:ring-sky-400/40" />
+                    <div class="mt-4 space-y-3">
+                        <!-- 1 -->
+                        <label
+                            class="flex items-start gap-3 rounded-xl border border-slate-200/60 bg-white/70 p-3 hover:border-slate-300 transition"
+                        >
+                            <input
+                                type="checkbox"
+                                [(ngModel)]="setup.enableAudit"
+                                class="mt-0.5 h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-400/30"
+                            />
+                            <span class="min-w-0">
+                                <span class="block text-sm font-semibold text-slate-800"
+                                    >Auditoría activada</span
+                                >
+                                <span class="block text-xs text-slate-500"
+                                    >Registra cada ejecución y cambios de reglas para
+                                    trazabilidad.</span
+                                >
+                            </span>
+                        </label>
 
-                <div class="mt-2 text-xs text-slate-400">
-                    Consejo: usa un nombre corto y claro. Podrás cambiarlo después.
+                        <!-- 2 -->
+                        <label
+                            class="flex items-start gap-3 rounded-xl border border-slate-200/60 bg-white/70 p-3 hover:border-slate-300 transition"
+                        >
+                            <input
+                                type="checkbox"
+                                [(ngModel)]="setup.inviteMembers"
+                                class="mt-0.5 h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-400/30"
+                            />
+                            <span class="min-w-0">
+                                <span class="block text-sm font-semibold text-slate-800"
+                                    >Invitar miembros ahora</span
+                                >
+                                <span class="block text-xs text-slate-500"
+                                    >Luego te llevamos a la pantalla de invitaciones.</span
+                                >
+                            </span>
+                        </label>
+
+                        <!-- 3 -->
+                        <label
+                            class="flex items-start gap-3 rounded-xl border border-slate-200/60 bg-white/70 p-3 hover:border-slate-300 transition"
+                        >
+                            <input
+                                type="checkbox"
+                                [(ngModel)]="setup.createSampleRules"
+                                class="mt-0.5 h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-400/30"
+                            />
+                            <span class="min-w-0">
+                                <span class="block text-sm font-semibold text-slate-800"
+                                    >Crear reglas de ejemplo</span
+                                >
+                                <span class="block text-xs text-slate-500"
+                                    >Te deja 2–3 reglas demo para probar el flujo.</span
+                                >
+                            </span>
+                        </label>
+
+                        <!-- 4 -->
+                        <label
+                            class="flex items-start gap-3 rounded-xl border border-slate-200/60 bg-white/70 p-3 hover:border-slate-300 transition"
+                        >
+                            <input
+                                type="checkbox"
+                                [(ngModel)]="setup.require2FA"
+                                class="mt-0.5 h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-400/30"
+                            />
+                            <span class="min-w-0">
+                                <span class="block text-sm font-semibold text-slate-800"
+                                    >Requerir 2FA</span
+                                >
+                                <span class="block text-xs text-slate-500"
+                                    >Mejora la seguridad para miembros y owners.</span
+                                >
+                            </span>
+                        </label>
+
+                        <!-- 5 -->
+                        <label
+                            class="flex items-start gap-3 rounded-xl border border-slate-200/60 bg-white/70 p-3 hover:border-slate-300 transition"
+                        >
+                            <input
+                                type="checkbox"
+                                [(ngModel)]="setup.enableWebhooks"
+                                class="mt-0.5 h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-400/30"
+                            />
+                            <span class="min-w-0">
+                                <span class="block text-sm font-semibold text-slate-800"
+                                    >Habilitar webhooks</span
+                                >
+                                <span class="block text-xs text-slate-500"
+                                    >Permite notificar eventos (auditoría, reglas, errores).</span
+                                >
+                            </span>
+                        </label>
+                    </div>
+
+                    <!-- Caja (inputs) -->
+                    <div class="mt-4 space-y-3">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <h3 class="text-sm font-semibold text-slate-900">Preferencias</h3>
+                                <p class="mt-1 text-xs leading-5 text-slate-500">
+                                    Puedes cambiarlas después en Settings.
+                                </p>
+                            </div>
+                            <span
+                                class="shrink-0 rounded-lg border border-slate-200/70 bg-white/70 px-2 py-1 text-[11px] font-semibold text-slate-600"
+                            >
+                                Defaults
+                            </span>
+                        </div>
+
+                        <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                            <!-- Timezone -->
+                            <div class="sm:col-span-1">
+                                <label class="mb-1 block text-xs font-semibold text-slate-700"
+                                    >Zona horaria</label
+                                >
+                                <input
+                                    [(ngModel)]="settings.timezone"
+                                    type="text"
+                                    placeholder="Ej: America/Lima"
+                                    class="w-full rounded-xl border border-slate-200/70 bg-white/80 px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-sky-300 focus:ring-2 focus:ring-sky-400/25"
+                                />
+                            </div>
+
+                            <!-- Currency -->
+                            <div class="sm:col-span-1">
+                                <label class="mb-1 block text-xs font-semibold text-slate-700"
+                                    >Moneda</label
+                                >
+                                <select
+                                    [(ngModel)]="settings.currency"
+                                    class="w-full rounded-xl border border-slate-200/70 bg-white/80 px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-sky-300 focus:ring-2 focus:ring-sky-400/25"
+                                >
+                                    <option value="PEN">PEN (S/)</option>
+                                    <option value="USD">USD ($)</option>
+                                    <option value="EUR">EUR (€)</option>
+                                </select>
+                            </div>
+
+                            <!-- Retention -->
+                            <div class="sm:col-span-1">
+                                <label class="mb-1 block text-xs font-semibold text-slate-700"
+                                    >Retención (días)</label
+                                >
+                                <input
+                                    [(ngModel)]="settings.dataRetentionDays"
+                                    type="number"
+                                    min="7"
+                                    max="3650"
+                                    class="w-full rounded-xl border border-slate-200/70 bg-white/80 px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-sky-300 focus:ring-2 focus:ring-sky-400/25"
+                                />
+                            </div>
+
+                            <!-- Locale -->
+                            <div class="sm:col-span-1">
+                                <label class="mb-1 block text-xs font-semibold text-slate-700"
+                                    >Formato / idioma</label
+                                >
+                                <select
+                                    [(ngModel)]="settings.locale"
+                                    class="w-full rounded-xl border border-slate-200/70 bg-white/80 px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-sky-300 focus:ring-2 focus:ring-sky-400/25"
+                                >
+                                    <option value="es-PE">Español (Perú)</option>
+                                    <option value="es-ES">Español (España)</option>
+                                    <option value="en-US">English (US)</option>
+                                </select>
+                            </div>
+
+                            <!-- Fiscal year -->
+                            <div class="sm:col-span-1">
+                                <label class="mb-1 block text-xs font-semibold text-slate-700"
+                                    >Inicio año fiscal</label
+                                >
+                                <select
+                                    [(ngModel)]="settings.fiscalYearStartMonth"
+                                    class="w-full rounded-xl border border-slate-200/70 bg-white/80 px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-sky-300 focus:ring-2 focus:ring-sky-400/25"
+                                >
+                                    <option [ngValue]="1">Enero</option>
+                                    <option [ngValue]="4">Abril</option>
+                                    <option [ngValue]="7">Julio</option>
+                                    <option [ngValue]="10">Octubre</option>
+                                </select>
+
+                                <div class="mt-1 text-[11px] text-slate-500">
+                                    Útil para reportes y agrupación de métricas.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3 text-xs text-slate-500">
+                            Recomendación: 90 días para empezar (cambios y auditoría sin inflar
+                            almacenamiento).
+                        </div>
+                    </div>
                 </div>
 
                 <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
-                    <button type="button" (click)="router.navigate(['/orgs'])" class="rounded-xl border border-slate-800 bg-slate-950/40 px-4 py-2 text-sm font-semibold text-white
-                    shadow-sm backdrop-blur transition hover:border-slate-700 hover:bg-slate-950/60">
+                    <!-- Secondary -->
+                    <button
+                        type="button"
+                        (click)="router.navigate(['/orgs'])"
+                        class="inline-flex items-center justify-center rounded-xl border border-slate-200/70 bg-white/50 px-4 py-2 text-sm font-semibold text-slate-700 backdrop-blur-xl shadow-[0_1px_0_rgba(15,23,42,0.06),0_10px_20px_rgba(15,23,42,0.06)] transition hover:bg-white hover:border-slate-300 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-400/35"
+                    >
                         Volver
                     </button>
 
-                    <button type="button" [disabled]="saving || !name.trim()" (click)="create()" class="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition
-                    hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60
-                    focus:outline-none focus:ring-2 focus:ring-sky-400/50">
+                    <!-- Primary -->
+                    <button
+                        type="button"
+                        [disabled]="saving || !name.trim()"
+                        (click)="create()"
+                        class="inline-flex items-center justify-center rounded-xl border border-slate-200/70 bg-white/70 px-4 py-2 text-sm font-semibold text-slate-900 backdrop-blur-xl shadow-[0_1px_0_rgba(15,23,42,0.06),0_10px_20px_rgba(15,23,42,0.06)] transition hover:bg-white hover:border-slate-300 disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
+                    >
                         <span *ngIf="!saving">Crear y entrar</span>
+
                         <span *ngIf="saving" class="inline-flex items-center gap-2">
                             <span
-                                class="h-4 w-4 animate-spin rounded-full border-2 border-slate-400 border-t-slate-900"></span>
+                                class="h-4 w-4 animate-spin rounded-full border-2 border-slate-300 border-t-slate-900"
+                            ></span>
                             Creando…
                         </span>
                     </button>
+                </div>
+
+                <!-- Extra: mini nota -->
+                <div
+                    class="mt-6 rounded-xl border border-slate-200/60 bg-white/60 p-4 text-xs text-slate-500"
+                >
+                    Tu organización encapsula reglas, auditoría, miembros y configuración. Es la
+                    unidad principal del sistema.
                 </div>
             </div>
         </div>
 
         <!-- Side info -->
         <div class="lg:col-span-2">
-            <div class="rounded-2xl border border-slate-800 bg-slate-950/40 p-6 backdrop-blur">
-                <h3 class="text-sm font-semibold text-white">¿Qué se crea automáticamente?</h3>
+            <div
+                class="rounded-2xl border border-slate-200/70 bg-white/65 p-6 backdrop-blur-xl shadow-[0_1px_0_rgba(15,23,42,0.06),0_12px_28px_rgba(15,23,42,0.06)]"
+            >
+                <h3 class="text-sm font-semibold text-slate-900">¿Qué se crea automáticamente?</h3>
 
-                <ul class="mt-3 space-y-3 text-sm text-slate-300">
+                <ul class="mt-3 space-y-3 text-sm text-slate-600">
                     <li class="flex gap-3">
-                        <span class="mt-1 h-2 w-2 rounded-full bg-sky-400/80"></span>
-                        <span>Tu usuario queda como <b class="text-white">owner</b> de la organización.</span>
+                        <span class="mt-2 h-2 w-2 shrink-0 rounded-full bg-sky-500/80"></span>
+                        <span
+                            >Tu usuario queda como <b class="text-slate-900">owner</b> de la
+                            organización.</span
+                        >
                     </li>
+
                     <li class="flex gap-3">
-                        <span class="mt-1 h-2 w-2 rounded-full bg-sky-400/80"></span>
-                        <span>Se genera un <b class="text-white">código</b> para unirse (luego lo habilitamos).</span>
+                        <span class="mt-2 h-2 w-2 shrink-0 rounded-full bg-sky-500/80"></span>
+                        <span
+                            >Se genera un <b class="text-slate-900">código</b> para unirse (luego lo
+                            habilitamos).</span
+                        >
                     </li>
+
                     <li class="flex gap-3">
-                        <span class="mt-1 h-2 w-2 rounded-full bg-sky-400/80"></span>
-                        <span>Podrás gestionar <b class="text-white">reglas</b>, <b class="text-white">auditoría</b> y
-                            <b class="text-white">miembros</b>.</span>
+                        <span class="mt-2 h-2 w-2 shrink-0 rounded-full bg-sky-500/80"></span>
+                        <span>
+                            Podrás gestionar <b class="text-slate-900">reglas</b>,
+                            <b class="text-slate-900">auditoría</b> y
+                            <b class="text-slate-900">miembros</b>.</span
+                        >
                     </li>
                 </ul>
 
-                <div class="mt-6 rounded-xl border border-slate-800 bg-slate-900/20 p-4 text-xs text-slate-300">
-                    Tip: en SaaS multi-tenant, todo lo importante vive dentro de la org. Por eso esta pantalla existe.
+                <div
+                    class="mt-6 rounded-xl border border-slate-200/60 bg-white/60 p-4 text-xs text-slate-500"
+                >
+                    Tip: en SaaS multi-tenant, todo lo importante vive dentro de la org. Por eso
+                    esta pantalla existe.
                 </div>
             </div>
         </div>

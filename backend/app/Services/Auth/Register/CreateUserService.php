@@ -7,43 +7,50 @@ use Illuminate\Database\QueryException;
 
 class CreateUserService
 {
-    private $MAX_ATTEMPTS = 20;
+    //! Definir número máximo de intentos para generar código único
+    private int $MAX_ATTEMPTS = 20;
 
-    //! Crear un nuevo usuario
+    //! Crear un nuevo usuario garantizando unicidad del código
     public function create(array $data): User
     {
+        // Intentar generar y persistir usuario múltiples veces en caso de colisión
         for ($i = 0; $i < $this->MAX_ATTEMPTS; $i++) {
-            // Siempre generar automáticamente
+
+            // Generar código automáticamente en cada intento
             $data['code'] = $this->generateCode();
 
             try {
+                // Persistir usuario en base de datos
                 return User::create($data);
             } catch (QueryException $e) {
-                // Si es duplicado por UNIQUE(code), reintentar
-                if ($this->isDuplicateCodeError($e)) {
-                    continue;
-                }
 
-                // Si fue otro error (email duplicado, etc.), propagarlo
+                // Verificar si el error corresponde a duplicidad del código
+                if ($this->isDuplicateCodeError($e)) 
+                    continue;
+
+                // Propagar cualquier otro tipo de error
                 throw $e;
             }
         }
 
+        // Lanzar excepción si no se logra generar código único tras múltiples intentos
         throw new \RuntimeException('No se pudo generar un code único para el usuario.');
     }
 
-    //! Generar código de 8 digitos
+    //! Generar código numérico de 8 dígitos
     private function generateCode(): string
     {
         return (string) random_int(10_000_000, 99_999_999);
     }
 
-    //! Manejo de error de codigo duplicado
+    //! Determinar si la excepción corresponde a duplicidad del código
     private function isDuplicateCodeError(QueryException $e): bool
     {
+        // Extraer número y mensaje de error de la base de datos
         $errorNumber = (int) ($e->errorInfo[1] ?? 0);  // 2601 o 2627
         $message     = (string) ($e->errorInfo[2] ?? $e->getMessage());
 
+        // Validar que el error pertenezca al índice único del código
         return in_array($errorNumber, [2601, 2627], true)
             && str_contains($message, 'users_code_unique');
     }

@@ -44,7 +44,7 @@ function getEntryInitial(entry: EntryAnimation) {
         case "fadeUp":
             return { opacity: 0, y: 18, filter: "blur(6px)", scale: 0.995 };
         case "fadeScale":
-            return { opacity: 0, y: 10, filter: "blur(4px)", scale: 0.98 };
+            return { opacity: 0, y: 0, filter: "blur(4px)", scale: 0.98 };
         case "fadeBlur":
             return { opacity: 0, y: 0, filter: "blur(10px)", scale: 1 };
         case "slideLeft":
@@ -82,7 +82,7 @@ export default function SectionAnimation({
 }: SectionAnimationProps) {
     const ref = React.useRef<HTMLElement | null>(null);
 
-    // scroll-based ambience (la que ya tenías)
+    // Scroll ambience SOLO para el contenido (no para el background)
     const { scrollYProgress } = useScroll({
         target: ref,
         offset: ["start 95%", "end 5%"],
@@ -97,11 +97,7 @@ export default function SectionAnimation({
     const opacity = useTransform(visibility, [0, 1], [0, 1]);
     const blur = useTransform(visibility, [0, 1], [blurPx, 0]);
     const y = useTransform(visibility, [0, 1], [yOut, 0]);
-    const scale = useTransform(
-        scrollYProgress,
-        [0, 0.15, 0.85, 1],
-        [0.94, 1, 1, 0.94]
-    );
+    const scale = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0.94, 1, 1, 0.94]);
     const scaleX = useTransform(visibility, [0, 1], [expandX, 1]);
 
     const o = useSpring(opacity, spring);
@@ -111,9 +107,11 @@ export default function SectionAnimation({
     const sx = useSpring(scaleX, spring);
 
     const filter = useTransform(b, (v) => `blur(${v}px)`);
-    const dustOpacity = useTransform(visibility, [0, 1], [0.12, 0]);
 
-    // ✅ entry real: solo ocurre cuando entra al viewport
+    // Dust overlay SOLO visual, pero NO desaparece del background
+    const dustOpacity = useTransform(visibility, [0, 1], [0.14, 0.06]);
+    const dustO = useSpring(dustOpacity, spring);
+
     const entryInitial = entry === "none" ? undefined : getEntryInitial(entry);
     const entryInView = entry === "none" ? undefined : getEntryInView(entry);
 
@@ -125,50 +123,52 @@ export default function SectionAnimation({
                 : "";
 
     return (
-        <motion.section
-            ref={ref as any}
-            id={id}
-            className={cx("relative w-full", containClass, className)}
-            initial={entryInitial}
-            whileInView={entryInView}
-            viewport={{
-                once: entryOnce,
-                amount: 0.25, // cuándo se considera "entró"
-                margin: "0px 0px -10% 0px", // opcional: hace que dispare un poco antes
-            }}
-            transition={{
-                duration: entryDuration,
-                delay: entryDelay,
-                ease: [0.22, 1, 0.36, 1],
-            }}
-            style={{
-                // scroll ambience (se mantiene)
-                opacity: o,
-                filter,
-                y: yy,
-                scale: sc,
-                scaleX: sx,
-                transformOrigin: "center",
-                willChange: "opacity, filter, transform",
-            }}
-        >
+        <section ref={ref as any} id={id} className={cx("relative w-full", containClass, className)}>
+            {/* ✅ Background fijo: nunca se anima */}
             {background ? (
-                <div className="pointer-events-none absolute inset-0 -z-10">
+                <div className="pointer-events-none absolute inset-0 z-0">
                     {background}
                 </div>
             ) : null}
 
+            {/* ✅ Dust overlay fijo/sutil */}
             <motion.div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-0 mix-blend-overlay -z-10"
+                className="pointer-events-none absolute inset-0 z-0 mix-blend-overlay"
                 style={{
-                    opacity: dustOpacity,
+                    opacity: dustO,
                     background:
-                        "radial-gradient(circle at 1px 1px, rgba(15,23,42,0.12) 1px, transparent 0) 0 0 / 22px 22px",
+                        "radial-gradient(circle at 1px 1px, rgba(15,23,42,0.10) 1px, transparent 0) 0 0 / 22px 22px",
                 }}
             />
 
-            <div className="relative z-10">{children}</div>
-        </motion.section>
+            {/* ✅ Todo lo animado va aquí (contenido) */}
+            <motion.div
+                className="relative z-10"
+                initial={entryInitial}
+                whileInView={entryInView}
+                viewport={{
+                    once: entryOnce,
+                    amount: 0.25,
+                    margin: "0px 0px -10% 0px",
+                }}
+                transition={{
+                    duration: entryDuration,
+                    delay: entryDelay,
+                    ease: [0.22, 1, 0.36, 1],
+                }}
+                style={{
+                    opacity: o,
+                    filter,
+                    y: yy,
+                    scale: sc,
+                    scaleX: sx,
+                    transformOrigin: "center",
+                    willChange: "opacity, filter, transform",
+                }}
+            >
+                {children}
+            </motion.div>
+        </section>
     );
 }

@@ -1,0 +1,38 @@
+<!-- Desktop sidebar -->
+<aside class="w-[280px] h-full bg-[#fdfefe]">
+
+    <div [class.w-[96px]]="collapsed"
+        class="relative h-full overflow-hidden border border-slate-200/70
+            bg-white/70 backdrop-blur-xl
+            shadow-[0_20px_50px_rgba(15,23,42,0.10)]"
+    >
+        <!-- Premium glow -->
+        <div class="pointer-events-none absolute -top-14 left-1/2 h-40 w-[520px] -translate-x-1/2 opacity-60
+             bg-[radial-gradient(ellipse_at_top,rgba(56,189,248,0.14),transparent_60%)]"></div>
+
+        <!-- Inner layout -->
+        <div class="relative flex h-full flex-col p-3">
+            
+            <!-- Org -->
+            <div class="mt-3">
+                <app-sidebar-org-switcher [orgName]="orgName" [collapsed]="collapsed"
+                    (orgClicked)="orgClicked.emit()"></app-sidebar-org-switcher>
+            </div>
+
+            <!-- Nav -->
+            <div class="mt-3 flex-1">
+                <app-sidebar-nav [nav]="nav" [collapsed]="collapsed"></app-sidebar-nav>
+            </div>
+
+            
+
+            <!-- User card -->
+            <div class="mt-24">
+                <app-sidebar-user-card [collapsed]="collapsed" [userName]="userName" [userEmail]="userEmail"
+                    (profileClicked)="profileClicked.emit()"
+                    (logoutClicked)="logoutClicked.emit()"></app-sidebar-user-card>
+            </div>
+        </div>
+    </div>
+</aside>
+

@@ -1,0 +1,20 @@
+<div class="relative">
+    <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-950">
+        <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd"
+                d="M8.5 3.5a5 5 0 103.98 8.02l2.75 2.75a.75.75 0 101.06-1.06l-2.75-2.75A5 5 0 008.5 3.5zm-3.5 5a3.5 3.5 0 117 0 3.5 3.5 0 01-7 0z"
+                clip-rule="evenodd"
+            />
+        </svg>
+    </span>
+
+    <input
+        type="text"
+        (input)="queryChange.emit(($any($event.target)).value)"
+        class="w-[220px] rounded-xl border border-slate-200/70 bg-white/60 pl-9 pr-3 py-2 text-sm
+            text-slate-900 placeholder:text-slate-400 backdrop-blur-xl
+            shadow-[0_1px_0_rgba(15,23,42,0.06)]
+            focus:outline-none focus:ring-2 focus:ring-sky-400/35"
+        placeholder="Buscar…"
+    />
+</div>

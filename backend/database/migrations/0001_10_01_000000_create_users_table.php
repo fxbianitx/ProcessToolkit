@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('username')->unique()->nullable();
             $table->string('phone')->unique()->nullable();
-            $table->timestamp('date_of_birth');
+            $table->date('date_of_birth');
             $table->string('email')->unique();
             $table->string('password');
             $table->string('profile_photo')->nullable();

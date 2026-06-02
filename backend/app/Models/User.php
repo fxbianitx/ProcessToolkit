@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\Concerns\User\HasOrganizationMembership;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
@@ -13,7 +14,9 @@ use Filament\Panel;
 
 class User extends Authenticatable implements MustVerifyEmail, FilamentUser
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes,
+        // Trait de Funciones
+        HasOrganizationMembership;
 
     protected $fillable = [
         // Informacion personal
@@ -62,22 +65,6 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
     public function getNameAttribute(): string
     {
         return trim(($this->first_name ?? '') . ' ' . ($this->last_name ?? '')) ?: ($this->username ?? $this->email ?? 'Usuario');
-    }
-
-    //! Relación: El usuario pertenece a una organización
-    public function organizations()
-    {
-        return $this->belongsToMany(Organization::class)
-            ->withPivot('role', 'is_active')
-            ->withTimestamps()
-            ->wherePivot('deleted_at', null);
-    }
-
-    //! Helper para verificar si es administrador rápidamente
-    public function isAdminIn(int $organizationId): bool
-    {
-        $org = $this->organizations()->where('organization_id', $organizationId)->first();
-        return $org ? $org->pivot->role === 'admin' : false;
     }
 
     //! Verificar que no este bloqueado

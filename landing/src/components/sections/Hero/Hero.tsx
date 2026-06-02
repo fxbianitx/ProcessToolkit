@@ -1,6 +1,7 @@
 "use client";
 
-import HeroBackground from "./HeroBackground";
+import HeroBackground from "../../animation/Background/HeroBackground";
+// import HeroBackground from "./HeroBackground";
 import HeroCopy from "./HeroCopy";
 import HeroVideo from "./HeroVideo";
 import SectionAnimation from "../../animation/Section/SectionAnimation";
@@ -9,8 +10,8 @@ export default function Hero() {
     return (
         <SectionAnimation
             className="sm:py-16 sm:pb-20 py-6 pb-16"
-            background={<HeroBackground />} 
-            expandX={1.0}                    
+            background={<HeroBackground />}
+            expandX={1.0}
             containX="clip"
             entryDelay={0.4}
             entryDuration={1}

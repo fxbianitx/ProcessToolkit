@@ -53,18 +53,21 @@ export default function FAQ() {
     const [active, setActive] = useState(0);
     const timerRef = useRef<number | null>(null);
 
-    function clearTimer() {
-        if (timerRef.current) window.clearInterval(timerRef.current);
+    // ✅ limpia intervalo
+    const clearTimer = () => {
+        if (timerRef.current !== null) window.clearInterval(timerRef.current);
         timerRef.current = null;
-    }
+    };
 
-    function startTimer() {
+    // ✅ inicia intervalo (siempre reinicia)
+    const startTimer = () => {
         clearTimer();
         timerRef.current = window.setInterval(() => {
             setActive((prev) => (prev + 1) % items.length);
         }, 5000);
-    }
+    };
 
+    // ✅ precarga imágenes
     useEffect(() => {
         items.forEach((it) => {
             const im = new Image();
@@ -72,11 +75,31 @@ export default function FAQ() {
         });
     }, [items]);
 
+    // ✅ arranca automático al renderizar + cleanup
+    useEffect(() => {
+        startTimer();
+        return () => clearTimer();
+    }, [items.length]);
 
-    function onSelect(i: number) {
+    // ✅ pausa/reanuda al cambiar de pestaña + cleanup
+    useEffect(() => {
+        const onVis = () => {
+            if (document.hidden) clearTimer();
+            else startTimer();
+        };
+
+        document.addEventListener("visibilitychange", onVis);
+        return () => {
+            document.removeEventListener("visibilitychange", onVis);
+            clearTimer();
+        };
+    }, [items.length]);
+
+    // ✅ click manual (reinicia el carrusel)
+    const onSelect = (i: number) => {
         setActive(i);
-        startTimer(); // reinicia el carrusel al interactuar
-    }
+        startTimer();
+    };
 
     const current = items[active];
 
@@ -84,6 +107,7 @@ export default function FAQ() {
     const [nextImg, setNextImg] = useState<string | null>(null);
     const [isFading, setIsFading] = useState(false);
 
+    // ✅ swap de imagen suave (sin depender de clicks)
     useEffect(() => {
         const target = current.img;
         if (target === shownImg) return;
@@ -94,8 +118,7 @@ export default function FAQ() {
         const im = new Image();
         im.src = target;
 
-        im.onload = () => {
-            // cuando está lista, esperamos un frame y hacemos el swap suave
+        const done = () => {
             requestAnimationFrame(() => {
                 setShownImg(target);
                 setNextImg(null);
@@ -103,8 +126,14 @@ export default function FAQ() {
             });
         };
 
-        // si el browser ya la tenía en cache, onload puede disparar rápido igual
+        if (im.complete) done(); // por si ya estaba en cache
+        else im.onload = done;
+
+        return () => {
+            im.onload = null;
+        };
     }, [current.img, shownImg]);
+
 
 
     return (

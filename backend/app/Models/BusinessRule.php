@@ -28,6 +28,9 @@ class BusinessRule extends Model
         'conditions' => 'array',
         'actions' => 'array',
         'is_active' => 'boolean',
+        'priority' => 'integer',
+        'execution_count' => 'integer',
+        'organization_id' => 'integer',
         'last_executed_at' => 'datetime',
     ];
 

@@ -25,7 +25,7 @@ export class OrgDashboardComponent implements OnInit, OnDestroy {
 
     constructor(
         private route: ActivatedRoute,
-        private router: Router,
+        public router: Router,
         private api: OrganizationApiService,
         private facade: OrganizationFacade
     ) { }
@@ -45,11 +45,10 @@ export class OrgDashboardComponent implements OnInit, OnDestroy {
         const s = this.api.getOrgById$(orgId).subscribe({
             next: (org) => {
                 this.org = org;
-                this.facade.select(org); // setear current org en state
+                this.facade.select(org);
                 this.loading = false;
             },
             error: () => {
-                //! Si falla, volver al selector
                 this.loading = false;
                 this.router.navigate(["/orgs"]);
             },

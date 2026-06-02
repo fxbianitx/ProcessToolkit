@@ -1,14 +1,33 @@
-<div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+<div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
     <div>
-        <h2 class="text-lg font-semibold text-white">{{ title }}</h2>
-        <p *ngIf="description" class="mt-1 text-sm text-slate-300">
+        <h2 class="text-lg font-semibold tracking-[-0.01em] text-slate-900">
+            {{ title }}
+        </h2>
+
+        <p *ngIf="description" class="mt-1 text-sm leading-6 text-slate-600">
             {{ description }}
         </p>
     </div>
 
-    <button *ngIf="actionLabel" type="button" (click)="onAction()"
-        class="inline-flex items-center justify-center rounded-xl border border-slate-800 bg-slate-950/40 px-4 py-2 text-sm font-semibold text-white
-           shadow-sm backdrop-blur transition hover:border-slate-700 hover:bg-slate-950/60 focus:outline-none focus:ring-2 focus:ring-sky-400/50">
-        {{ actionLabel }}
-    </button>
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <!-- Secondary (left) -->
+        <button
+            *ngIf="secondaryLabel"
+            type="button"
+            (click)="onSecondary()"
+            class="inline-flex items-center justify-center rounded-xl border border-slate-200/70 bg-white/50 px-4 py-2 text-sm font-semibold text-slate-700 backdrop-blur-xl shadow-[0_1px_0_rgba(15,23,42,0.06),0_10px_20px_rgba(15,23,42,0.06)] transition hover:bg-white hover:border-slate-300 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
+        >
+            {{ secondaryLabel }}
+        </button>
+
+        <!-- Primary (right) -->
+        <button
+            *ngIf="actionLabel"
+            type="button"
+            (click)="onAction()"
+            class="inline-flex items-center justify-center rounded-xl border border-slate-200/70 bg-white/70 px-4 py-2 text-sm font-semibold text-slate-900 backdrop-blur-xl shadow-[0_1px_0_rgba(15,23,42,0.06),0_10px_20px_rgba(15,23,42,0.06)] transition hover:bg-white hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
+        >
+            {{ actionLabel }}
+        </button>
+    </div>
 </div>

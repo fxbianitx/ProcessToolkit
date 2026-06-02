@@ -34,13 +34,15 @@ export default function HeroCopy() {
 
             {/* TITLE */}
             <h1 className="relative mt-8 mb-6 text-center sm:text-left text-[3.6em] lg:text-[3em] leading-[1.05] font-bold tracking-[-0.035em] animate-fadeInUp delay-100">
-                <span className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-600 bg-clip-text text-transparent">
+                <span className="shine-text bg-gradient-to-r from-slate-900 via-slate-800 to-slate-600 bg-clip-text text-transparent">
                     Centraliza decisiones.
                 </span>
-                <span className="block text-slate-700 mt-1">
+
+                <span className="shine-text block text-slate-700 mt-1">
                     Audita cada ejecución.
                 </span>
             </h1>
+
 
             {/* DESCRIPTION */}
             <p className="mt-6 text-[15px] sm:text-[16px] leading-7 text-slate-600 max-w-[46rem] animate-fadeInUp delay-200">
@@ -63,6 +65,7 @@ export default function HeroCopy() {
             <div className="mt-8 text-[11px] text-slate-500 leading-5 max-w-[46rem] animate-fadeInUp delay-500">
                 Open Source por ahora • diseñado para integrarse en ERP, SaaS, tiendas y herramientas internas.
             </div>
+
         </div>
     );
 }

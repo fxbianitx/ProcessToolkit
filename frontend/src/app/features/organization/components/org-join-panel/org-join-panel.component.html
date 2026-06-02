@@ -1,0 +1,94 @@
+<div
+    class="rounded-3xl border border-slate-200/70 bg-white/65 p-6 backdrop-blur-xl shadow-[0_1px_0_rgba(15,23,42,0.06),0_12px_28px_rgba(15,23,42,0.06)]"
+>
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+            <h3 class="text-base font-semibold text-slate-900">Unirse por código</h3>
+            <p class="mt-1 text-sm leading-6 text-slate-600 max-w-[52rem]">
+                Ingresa el código de invitación que te dio un owner/admin. Enviaremos una solicitud
+                y el equipo podrá aprobarla.
+            </p>
+        </div>
+
+        <button
+            type="button"
+            (click)="back.emit()"
+            class="inline-flex items-center justify-center rounded-xl border border-slate-200/70 bg-white/50 px-4 py-2 text-sm font-semibold text-slate-700 backdrop-blur-xl shadow-[0_1px_0_rgba(15,23,42,0.06),0_10px_20px_rgba(15,23,42,0.06)] transition hover:bg-white hover:border-slate-300 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
+        >
+            Volver
+        </button>
+    </div>
+
+    <div class="mt-6 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+        <!-- Panel principal -->
+        <div>
+            <ng-container *ngIf="state === 'form'; else sentTpl">
+                <app-org-join-code-input
+                    [(code)]="code"
+                    [(note)]="note"
+                    [applying]="applying"
+                    (apply)="onApply()"
+                ></app-org-join-code-input>
+
+                <div class="mt-4 rounded-2xl border border-slate-200/60 bg-white/60 p-4">
+                    <div class="text-sm font-semibold text-slate-900">Consejos</div>
+                    <ul class="mt-2 space-y-2 text-sm text-slate-600">
+                        <li>• Verifica que el código no tenga espacios.</li>
+                        <li>• Si el código expiró, pide uno nuevo al owner/admin.</li>
+                        <li>• La aprobación puede tardar según las políticas de la org.</li>
+                    </ul>
+                </div>
+            </ng-container>
+
+            <ng-template #sentTpl>
+                <app-org-join-status-card
+                    title="Solicitud enviada"
+                    subtitle="Tu solicitud fue registrada. Te notificaremos cuando sea aprobada."
+                ></app-org-join-status-card>
+
+                <div class="mt-4 flex flex-col gap-2 sm:flex-row">
+                    <button
+                        type="button"
+                        (click)="reset()"
+                        class="inline-flex items-center justify-center rounded-xl border border-slate-200/70 bg-white/70 px-4 py-2 text-sm font-semibold text-slate-900 backdrop-blur-xl shadow-[0_1px_0_rgba(15,23,42,0.06),0_10px_20px_rgba(15,23,42,0.06)] transition hover:bg-white hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
+                    >
+                        Enviar otra solicitud
+                    </button>
+
+                    <button
+                        type="button"
+                        (click)="back.emit()"
+                        class="inline-flex items-center justify-center rounded-xl border border-slate-200/70 bg-white/50 px-4 py-2 text-sm font-semibold text-slate-700 backdrop-blur-xl shadow-[0_1px_0_rgba(15,23,42,0.06),0_10px_20px_rgba(15,23,42,0.06)] transition hover:bg-white hover:border-slate-300 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
+                    >
+                        Volver a mis organizaciones
+                    </button>
+                </div>
+            </ng-template>
+        </div>
+
+        <!-- Lateral informativo -->
+        <div class="rounded-2xl border border-slate-200/60 bg-white/60 p-5">
+            <div class="text-sm font-semibold text-slate-900">¿Qué pasa después?</div>
+            <ol class="mt-3 space-y-2 text-sm text-slate-600">
+                <li>
+                    <span class="font-semibold text-slate-700">1.</span> Enviamos la solicitud a la
+                    organización.
+                </li>
+                <li>
+                    <span class="font-semibold text-slate-700">2.</span> Owner/admin la revisa
+                    (puede pedir más info).
+                </li>
+                <li>
+                    <span class="font-semibold text-slate-700">3.</span> Si aprueban, aparecerá en
+                    “Tus organizaciones”.
+                </li>
+            </ol>
+
+            <div
+                class="mt-4 rounded-xl border border-slate-200/60 bg-white/70 p-3 text-xs text-slate-500"
+            >
+                Nota: esta pantalla no te da acceso inmediato; solo solicita ingreso.
+            </div>
+        </div>
+    </div>
+</div>

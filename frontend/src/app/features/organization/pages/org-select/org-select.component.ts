@@ -1,18 +1,19 @@
-import { Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
-import { CommonModule } from "@angular/common";
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { finalize, take } from 'rxjs';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { OrganizationFacade } from '../../services/organization-facade.service';
+import { Organization } from '@data/models/organization.model';
+import { OrgShellComponent } from '../../components/org-shell/org-shell.component';
+import { OrgSectionHeadComponent } from '../../components/org-section-head/org-section-head.component';
+import { OrgEmptyComponent } from '../../components/org-empty/org-empty.component';
+import { OrgCardComponent } from '../../components/org-card/org-card.component';
+import { OrgJoinPanelComponent } from '@organization/components/org-join-panel/org-join-panel.component';
 
-import { OrganizationFacade } from "../../services/organization-facade.service";
-import { Organization } from "@data/models/organization.model";
-
-// ✅ Componentes reutilizables
-import { OrgShellComponent } from "../../components/org-shell/org-shell.component";
-import { OrgSectionHeadComponent } from "../../components/org-section-head/org-section-head.component";
-import { OrgEmptyComponent } from "../../components/org-empty/org-empty.component";
-import { OrgCardComponent } from "../../components/org-card/org-card.component";
+type ViewMode = 'list' | 'join';
 
 @Component({
-    selector: "app-org-select",
+    selector: 'app-org-select',
     standalone: true,
     imports: [
         CommonModule,
@@ -20,8 +21,9 @@ import { OrgCardComponent } from "../../components/org-card/org-card.component";
         OrgSectionHeadComponent,
         OrgEmptyComponent,
         OrgCardComponent,
+        OrgJoinPanelComponent,
     ],
-    templateUrl: "./org-select.component.html",
+    templateUrl: './org-select.component.html',
 })
 export class OrgSelectComponent implements OnInit {
     //! Mantener lista de organizaciones del usuario
@@ -30,22 +32,40 @@ export class OrgSelectComponent implements OnInit {
     //! Indicar estado de carga
     loading = true;
 
-    constructor(private org: OrganizationFacade, private router: Router) { }
+    view: ViewMode = 'list';
+
+    constructor(
+        private org: OrganizationFacade,
+        public router: Router,
+        private cdr: ChangeDetectorRef,
+    ) {}
 
     //! Cargar organizaciones al iniciar
     ngOnInit(): void {
-        this.org.listMyOrgs$().subscribe({
-            next: (items) => {
-                this.orgs = items;
-                this.loading = false;
+        this.loading = true;
 
-                //! Redirigir si solo existe una organización
-                if (items.length === 1) {
-                    this.select(items[0]);
-                }
-            },
-            error: () => (this.loading = false),
-        });
+        this.org
+            .listMyOrgs$()
+            .pipe(
+                take(1),
+                finalize(() => {
+                    this.loading = false;
+                    this.cdr.detectChanges(); // o markForCheck()
+                }),
+            )
+            .subscribe({
+                next: (items) => {
+                    this.orgs = items;
+                    // por si quieres render inmediato incluso antes del finalize
+                    this.cdr.detectChanges();
+
+                    if (items.length === 1) this.select(items[0]);
+                },
+                error: () => {
+                    // finalize ya apaga loading
+                    this.cdr.detectChanges();
+                },
+            });
     }
 
     //! Seleccionar organización y navegar al dashboard
@@ -56,6 +76,16 @@ export class OrgSelectComponent implements OnInit {
 
     //! Navegar a crear organización
     goCreate(): void {
-        this.router.navigate(["/orgs/new"]);
+        this.router.navigate(['/orgs/new']);
+    }
+
+    //! Cambiar a panel de unirse a organizacion
+    showJoin(): void {
+        this.view = 'join';
+    }
+
+    //! Cambiar a penel de listado de organizaciones
+    showList(): void {
+        this.view = 'list';
     }
 }

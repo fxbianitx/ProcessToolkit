@@ -25,7 +25,7 @@ export class VerifyEmailComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private router: Router,
+        public router: Router,
         private registerFlow: AuthRegisterFlowState,
         private registerService: RegisterService
     ) {

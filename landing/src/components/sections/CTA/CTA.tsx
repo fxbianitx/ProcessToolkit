@@ -1,5 +1,6 @@
 "use client";
 
+import { Link } from "react-router-dom";
 import SectionAnimation from "../../animation/Section/SectionAnimation";
 import HeroBackground from "../Hero/HeroBackground";
 
@@ -11,7 +12,7 @@ export default function CTA() {
             background={<HeroBackground />}
             expandX={1.0}
             containX="clip"
-            entryDelay={1.6}
+            entryDelay={0.4}
             entryDuration={1}
             entry="fadeScale"
         >
@@ -38,21 +39,19 @@ export default function CTA() {
                         </div>
 
                         <div className="flex flex-col gap-3 sm:flex-row">
-                            <a
-                                href="/register"
+                            <Link
+                                to="/contact"
                                 className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-3 text-[14px] font-semibold text-white shadow-[0_18px_30px_-18px_rgba(15,23,42,0.35)] transition-transform duration-200 hover:scale-[1.01]"
                             >
-                                Registrarse
-                            </a>
+                                Contactanos!
+                            </Link>
 
-                            <a
-                                href="https://github.com/"
-                                target="_blank"
-                                rel="noreferrer"
+                            <button
+                                onClick={() => window.open("https://github.com/fxbianitx/ProcessToolkit", "_blank")}
                                 className="inline-flex items-center justify-center rounded-xl bg-white px-5 py-3 text-[14px] font-semibold text-slate-900 border border-slate-200 shadow-[0_18px_30px_-24px_rgba(15,23,42,0.35)] transition-colors hover:bg-slate-50"
                             >
                                 Ver GitHub →
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory; 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
@@ -13,10 +13,12 @@ class Organization extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name', // Nombre 
+        'code',
+        'name',
         'slug',
+        'privacy',
         'settings',
-        'status'
+        'status',
     ];
 
     protected $hidden = [
@@ -37,6 +39,17 @@ class Organization extends Model
             ->withPivot('role', 'is_active')
             ->withTimestamps()
             ->wherePivot('deleted_at', null);
+    }
+
+
+    public function joinRequests(): HasMany
+    {
+        return $this->hasMany(OrganizationJoinRequest::class);
+    }
+
+    public function blocks(): HasMany
+    {
+        return $this->hasMany(OrganizationBlock::class);
     }
 
     //! 
@@ -72,43 +85,69 @@ class Organization extends Model
     //! Geberar un Slug unico
     protected static function generateUniqueSlug(string $name): string
     {
-        // Normaliza y separa palabras
-        $words = collect(preg_split('/\s+/', trim(Str::lower($name))))
-            ->filter()
-            ->map(fn($w) => preg_replace('/[^a-z0-9]/', '', $w))
-            ->filter();
+        // Definir límites de longitud
+        $minLen = 18;
+        $maxLen = 36;
 
-        $first = $words->get(0, '');
-        $second = $words->get(1, '');
-        $last = $words->last() ?: '';
-
-        $base =
-            Str::substr($first, 0, 2) .
-            Str::substr($second, 0, 2) .
-            Str::substr($last, max(strlen($last) - 2, 0), 2);
-
-        $base = Str::slug($base);              // por si quedara raro
-        $base = Str::limit($base, 10, '');     // corto (máx 10 aprox)
-        $base = $base ?: Str::slug(Str::substr($name, 0, 6));
-
-        // Unicidad: si ya existe, le agrego sufijo corto basado en random
-        $slug = $base;
         $tries = 0;
 
-        while (self::where('slug', $slug)->exists()) {
+        while ($tries < 25) {
             $tries++;
-            $suffix = Str::lower(Str::random(3)); // 3 letras extra, corto
-            $slug = Str::limit($base, 10, '') . $suffix;
 
-            if ($tries > 20) {
-                // fallback extremo
-                $slug = Str::slug($base . '-' . Str::random(5));
-                break;
+            // Definir longitud aleatoria dentro del rango
+            $len = random_int($minLen, $maxLen);
+
+            // Generar slug aleatorio con separador "_" para estilo URL
+            $slug = self::generateRandomSlugWithUnderscore($len);
+
+            // Verificar unicidad
+            if (!self::where('slug', $slug)->exists()) {
+                return $slug;
             }
         }
 
-        return $slug;
+        // Fallback extremo si hay demasiadas colisiones
+        throw new \RuntimeException('No se pudo generar un slug único para la organización.');
     }
+
+    //! Generar slug aleatorio con letras/números y un separador "_"
+    private static function generateRandomSlugWithUnderscore(int $length): string
+    {
+        // Reservar 1 caracter para el "_" (si el largo lo permite)
+        if ($length < 3) {
+            return Str::lower(Str::random($length));
+        }
+
+        // Elegir posición del "_" evitando extremos para que se vea natural
+        $underscorePos = random_int(6, max(6, $length - 6));
+
+        // Crear partes
+        $leftLen  = $underscorePos;
+        $rightLen = $length - $underscorePos - 1;
+
+        $left  = Str::lower(Str::random($leftLen));
+        $right = Str::lower(Str::random($rightLen));
+
+        // Reemplazar cualquier caracter raro (Str::random es alfanumérico, pero se asegura)
+        $left  = preg_replace('/[^a-z0-9]/', '', $left) ?? '';
+        $right = preg_replace('/[^a-z0-9]/', '', $right) ?? '';
+
+        // Completar si por algún motivo quedó más corto
+        while (strlen($left) < $leftLen) {
+            $left .= Str::lower(Str::random(1));
+            $left = preg_replace('/[^a-z0-9]/', '', $left) ?? '';
+        }
+
+        while (strlen($right) < $rightLen) {
+            $right .= Str::lower(Str::random(1));
+            $right = preg_replace('/[^a-z0-9]/', '', $right) ?? '';
+        }
+
+        // Construir slug estilo URL
+        return $left . '_' . $right;
+    }
+
+
 
     //! Generar el Token automáticamente al crear la empresa
     protected static function booted()
@@ -121,7 +160,7 @@ class Organization extends Model
             // guardarlo en memoria (NO se persiste)
             $organization->plain_api_token = $plain;
 
-            // Slug corto y único derivado del nombre
+            // Slug
             $organization->slug = $organization->slug ?: self::generateUniqueSlug($organization->name);
         });
     }

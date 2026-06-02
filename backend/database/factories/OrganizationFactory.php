@@ -4,10 +4,8 @@ namespace Database\Factories;
 
 use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
-/**
- * @extends Factory<Organization>
- */
 class OrganizationFactory extends Factory
 {
     protected $model = Organization::class;
@@ -18,11 +16,11 @@ class OrganizationFactory extends Factory
 
         return [
             'name' => $name,
-
+            'code' => Str::upper(Str::random(12)),
             // slug NO lo seteamos: lo genera booted() si está vacío.
             'slug' => null,
             'status' => 'active',
-
+            'privacy' => 'private',
             // settings: tu accessor ya mete defaults, acá solo ponemos overrides opcionales
             'settings' => [
                 'timezone' => 'America/Lima',
